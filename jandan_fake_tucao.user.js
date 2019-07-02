@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      0.5
+// @version      0.6
 // @description  不能吐槽怎么活？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -103,8 +103,12 @@
                     smartloginSeq: this.livere_ids['2']
                 },
                 success: function (data) {
-                    dom.innerText = " 假吐槽[" + data.results.actions.totalCount + "] ";
-                    dom.dataset.isLoad = data.results.actions.totalCount;
+                    let totalCount = 0;
+                    if (data.results.actions && data.results.actions.totalCount) {
+                        totalCount = data.results.actions.totalCount;
+                    }
+                    dom.innerText = " 假吐槽[" + totalCount + "] ";
+                    dom.dataset.isLoad = totalCount;
                 }
             })
         },
