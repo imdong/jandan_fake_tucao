@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      0.4
+// @version      0.5
 // @description  不能吐槽怎么活？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -41,6 +41,7 @@
             $(window).bind("scroll", function () {
                 jandan_fake_tucao.lazyload();
             });
+            this.lazyload();
         },
         load_livere: function (e, d) {
             let a = $('<div class="jandan-tucao-livere" id="lv-container" data-id="city" data-uid="' + this.livere_uid + '" data-tucao-id="' + d + '"><div class="tucao-loading">假吐槽加载中....biubiubiu....</div></div>');
