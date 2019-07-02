@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      0.1
+// @version      0.2
 // @description  不能吐槽怎么活？
 // @author       ImDong
 // @match        *://jandan.net/*
