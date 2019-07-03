@@ -5,6 +5,7 @@
 // @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
+// @match        *://i.jandan.net/*
 // @grant        none
 // ==/UserScript==
 
