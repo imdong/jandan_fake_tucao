@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽(假吐槽)
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      0.8
+// @version      1.0
 // @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -19,6 +19,26 @@
         lv_comment_id: null,
         init: function () {
             this.livere_ids = atob(this.livere_uid).split('/');
+
+            // 吐槽详情页 (直接显示)
+            if (location.pathname.substr(0, 3) == '/t/') {
+                this.load_livere($('#tucao-list'), location.pathname.substr(3));
+                // 加一个隐藏/显示原生吐槽的按钮
+                $('#tucao-list .jandan-tucao').before('<a href="javascript:;" class="tucao-btn" id="jandan-tucao-show"> 吐槽去哪了?(显示 or 隐藏 原生真吐槽) </a>');
+                $('#jandan-tucao-show').click(function () {
+                    if ($('#tucao-list .jandan-tucao').is(":hidden")) {
+                        $('#tucao-list .jandan-tucao').animate({ height: 'toggle', opacity: 'toggle' }, 'slow');
+                    } else {
+                        $('#tucao-list .jandan-tucao').animate({ height: 'toggle', opacity: 'toggle' });
+                    }
+                });
+
+                // 如果原生吐槽没有数据就折叠他
+                if ($('#tucao-list .tucao-list').height() <= 0) {
+                    $('#tucao-list .jandan-tucao').animate({ height: 'toggle', opacity: 'toggle' }, 'slow');
+                }
+                return;
+            }
 
             // 给原生吐槽后面追加一个按钮
             $('.commentlist>li .tucao-btn').after('<a href="javascript:;" class="tucao-livere-btn"> 假吐槽 </a>');
@@ -53,8 +73,18 @@
 
             // 伪造吐槽页面
             window.livereOptions = {
-                refer: 'jandan.net/yellowcomment-' + d
+                refer: 'jandan.net/yellowcomment-' + d,
+                site: location.origin + '/t/' + d,
+                title: '煎蛋网 - ' + $('#content h1.title').text().split(' ')[0] + ' No.' + d
             }
+
+            // 设置标题要另类
+            let mate_title = document.querySelector('meta[property="og:title"]');
+            if (!mate_title) {
+                mate_title = $('<meta property="og:title" content="test" />');
+                $('head').append(mate_title);
+            }
+            $(mate_title).attr('content', livereOptions.title);
 
             // 避免重复加载 js
             if (typeof LivereTower !== 'undefined') {
@@ -85,13 +115,14 @@
                 if (lv_comment && lv_comment.id != this.lv_comment_id) {
                     if ($(lv_comment).height() != 500) {
                         this.lv_comment_id = lv_comment.id;
+                        clearInterval(jandan_fake_tucao.interval_id);
+
                         if ($(lv_comment).height() < 100) {
                             $('.tucao-loading').text("似乎没加载出来？...关掉去广告插件试下？");
                             return;
                         }
 
-                        clearInterval(jandan_fake_tucao.interval_id);
-                        $('.tucao-loading').remove();
+                        $('.tucao-loading').hide();
                     }
                 }
             }, 500);
