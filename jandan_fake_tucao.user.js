@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽(假吐槽)
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      0.7
+// @version      0.8
 // @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -82,7 +82,6 @@
         check_comment: function () {
             this.interval_id = setInterval(() => {
                 let lv_comment = LivereTower.get('lv_comment');
-                console.log($(lv_comment).height());
                 if (lv_comment && lv_comment.id != this.lv_comment_id) {
                     if ($(lv_comment).height() != 500) {
                         this.lv_comment_id = lv_comment.id;
@@ -95,7 +94,7 @@
                         $('.tucao-loading').remove();
                     }
                 }
-            }, 100);
+            }, 500);
         },
         // 获取吐槽数
         get_count: function (dom) {
