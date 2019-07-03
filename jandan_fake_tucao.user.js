@@ -27,6 +27,7 @@
                     comment_dom = $(this).closest('li'),
                     container = comment_dom.find("div.jandan-tucao-livere");
 
+                // 显示 or 隐藏 是个问题
                 if (container.length) {
                     container.slideToggle("fast");
                 } else {
@@ -46,11 +47,11 @@
 
             this.tucao_id = d;
 
-            // 移除上一个评论框
+            // 上一个评论框要改名
             $('#lv-container').attr('id', 'jandan-tucao-' + $('#lv-container').data('tucao-id'));
             e.append(a);
 
-            // 设置页面
+            // 伪造吐槽页面
             window.livereOptions = {
                 refer: 'jandan.net/yellowcomment-' + d
             }
@@ -62,6 +63,7 @@
                 return;
             }
 
+            // 首次肯定要加载了...
             (function (d, s) {
                 var j, e = d.getElementsByTagName(s)[0];
 
@@ -76,6 +78,7 @@
                 jandan_fake_tucao.check_comment();
             })(document, 'script');
         },
+        // 检查评论框是否加载出来
         check_comment: function () {
             this.interval_id = setInterval(() => {
                 let lv_comment = LivereTower.get('lv_comment');
@@ -94,6 +97,7 @@
                 }
             }, 100);
         },
+        // 获取吐槽数
         get_count: function (dom) {
             // 获取id
             let tucao_id = $(dom).prev().data('id');
@@ -120,6 +124,7 @@
                 }
             })
         },
+        // 懒加载
         lazyload: function () { //监听页面滚动事件
             var seeHeight = document.documentElement.clientHeight; //可见区域高度
             var scrollTop = document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部高度
@@ -139,5 +144,6 @@
 
     window.jandan_fake_tucao = jandan_fake_tucao;
 
+    // Biu biu biu!
     jandan_fake_tucao.init();
 })(window.jQuery);
