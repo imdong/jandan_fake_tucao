@@ -20,3 +20,23 @@
 
 安装地址: [https://greasyfork.org/zh-CN/scripts/387088](https://greasyfork.org/zh-CN/scripts/387088)
 其实本git的 user.js 也行
+
+## 手机上怎么用
+
+### 安卓手机
+
+建议安装 Yandex 浏览器 [Google Play](https://play.google.com/store/apps/details?id=com.yandex.browser)
+
+然后进入 [Chrome 应用商店](https://chrome.google.com/webstore/category/extensions) 安装 [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+
+最后安装 [假吐槽插件](https://greasyfork.org/zh-CN/scripts/387088) 即可
+
+### 苹果 iPhone 手机 (安卓也可以用)
+
+将 **任意** 页面添加到个人收藏;
+
+修改收藏的地址为下面:
+
+    javascript:$.getScript('https://greasyfork.org/scripts/387088/code/jandan_fake_tucao.user.js');
+
+每次打开页面需要手动点一下收藏加载(很挫,但没办法)
