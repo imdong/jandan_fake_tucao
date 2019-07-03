@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽(假吐槽)
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      1.0
+// @version      1.01
 // @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -14,9 +14,9 @@
     var jandan_fake_tucao = window.jandan_fake_tucao || {
         livere_uid: 'MTAyMC80NTA0MS8yMTU1OQ==',
         livere_ids: null,
-        tucao_id: null,
         lazyload_dom: null,
         lv_comment_id: null,
+        interval_id: 0,
         init: function () {
             this.livere_ids = atob(this.livere_uid).split('/');
 
@@ -39,7 +39,7 @@
                 }
                 return;
             }
-
+            console.log($);
             // 给原生吐槽后面追加一个按钮
             $('.commentlist>li .tucao-btn').after('<a href="javascript:;" class="tucao-livere-btn"> 假吐槽 </a>');
             $('.commentlist>li .tucao-livere-btn').click(function (e) {
@@ -62,16 +62,15 @@
             });
             this.lazyload();
         },
+        // 加载来必力 评论框
         load_livere: function (e, d) {
             let a = $('<div class="jandan-tucao-livere" id="lv-container" data-id="city" data-uid="' + this.livere_uid + '" data-tucao-id="' + d + '"><div class="tucao-loading">假吐槽加载中....biubiubiu....</div></div>');
-
-            this.tucao_id = d;
 
             // 上一个评论框要改名
             $('#lv-container').attr('id', 'jandan-tucao-' + $('#lv-container').data('tucao-id'));
             e.append(a);
 
-            // 伪造吐槽页面
+            // 伪造吐槽页面信息
             window.livereOptions = {
                 refer: 'jandan.net/yellowcomment-' + d,
                 site: location.origin + '/t/' + d,
@@ -86,10 +85,11 @@
             }
             $(mate_title).attr('content', livereOptions.title);
 
+            this.check_comment();
+
             // 避免重复加载 js
             if (typeof LivereTower !== 'undefined') {
                 LivereTower.init();
-                this.check_comment();
                 return;
             }
 
@@ -104,13 +104,12 @@
                 j.async = true;
 
                 e.parentNode.insertBefore(j, e);
-
-                jandan_fake_tucao.check_comment();
             })(document, 'script');
         },
         // 检查评论框是否加载出来
         check_comment: function () {
             this.interval_id = setInterval(() => {
+                if (typeof LivereTower === 'undefined') return;
                 let lv_comment = LivereTower.get('lv_comment');
                 if (lv_comment && lv_comment.id != this.lv_comment_id) {
                     if ($(lv_comment).height() != 500) {
@@ -175,5 +174,8 @@
     window.jandan_fake_tucao = jandan_fake_tucao;
 
     // Biu biu biu!
-    jandan_fake_tucao.init();
+
+    if (typeof $ === "function") {
+        jandan_fake_tucao.init();
+    }
 })(window.jQuery);
