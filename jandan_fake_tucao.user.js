@@ -1,27 +1,26 @@
 // ==UserScript==
-// @name         煎蛋外挂吐槽
+// @name         煎蛋外挂吐槽(假吐槽)
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      0.6
-// @description  不能吐槽怎么活？
+// @version      0.7
+// @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
 // @grant        none
 // ==/UserScript==
 
-(function () {
+(function ($) {
     'use strict';
 
     var jandan_fake_tucao = window.jandan_fake_tucao || {
         livere_uid: 'MTAyMC80NTA0MS8yMTU1OQ==',
         livere_ids: null,
         tucao_id: null,
-        lazyload_num: 0,
-        lazyload_n: 0,
         lazyload_dom: null,
+        lv_comment_id: null,
         init: function () {
             this.livere_ids = atob(this.livere_uid).split('/');
 
-            // 给原生吐槽追加一个按钮
+            // 给原生吐槽后面追加一个按钮
             $('.commentlist>li .tucao-btn').after('<a href="javascript:;" class="tucao-livere-btn"> 假吐槽 </a>');
             $('.commentlist>li .tucao-livere-btn').click(function (e) {
                 let tucao_id = $(this).prev().data('id'),
@@ -37,7 +36,6 @@
 
             // 绑定懒加载
             this.lazyload_dom = $('.commentlist>li .tucao-livere-btn');
-            this.lazyload_num = this.lazyload_dom.length;
             $(window).bind("scroll", function () {
                 jandan_fake_tucao.lazyload();
             });
@@ -80,11 +78,21 @@
         },
         check_comment: function () {
             this.interval_id = setInterval(() => {
-                if ($('#lv-container iframe[id^="lv-comment"]').height() > 0) {
-                    clearInterval(jandan_fake_tucao.interval_id);
-                    $('.tucao-loading').remove();
+                let lv_comment = LivereTower.get('lv_comment');
+                console.log($(lv_comment).height());
+                if (lv_comment && lv_comment.id != this.lv_comment_id) {
+                    if ($(lv_comment).height() != 500) {
+                        this.lv_comment_id = lv_comment.id;
+                        if ($(lv_comment).height() < 100) {
+                            $('.tucao-loading').text("似乎没加载出来？...关掉去广告插件试下？");
+                            return;
+                        }
+
+                        clearInterval(jandan_fake_tucao.interval_id);
+                        $('.tucao-loading').remove();
+                    }
                 }
-            }, 1000);
+            }, 100);
         },
         get_count: function (dom) {
             // 获取id
@@ -115,15 +123,15 @@
         lazyload: function () { //监听页面滚动事件
             var seeHeight = document.documentElement.clientHeight; //可见区域高度
             var scrollTop = document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部高度
-            for (var i = this.lazyload_n; i < this.lazyload_num; i++) {
+            for (var i = 0; i < this.lazyload_dom.length; i++) {
                 if (this.lazyload_dom[i].offsetTop >= scrollTop && this.lazyload_dom[i].offsetTop < seeHeight + scrollTop) {
-                    console.log(this.lazyload_dom[i]);
                     if (typeof this.lazyload_dom[i].dataset.isLoad == "undefined") {
                         // 标记为已经加载
                         this.lazyload_dom[i].dataset.isLoad = 0;
                         this.get_count(this.lazyload_dom[i]);
+                        // 既然已经加载了 那就移除吧
+                        this.lazyload_dom.splice(i, 1);
                     }
-                    this.lazyload_n = i + 1;
                 }
             }
         }
@@ -132,4 +140,4 @@
     window.jandan_fake_tucao = jandan_fake_tucao;
 
     jandan_fake_tucao.init();
-})();
+})(window.jQuery);
