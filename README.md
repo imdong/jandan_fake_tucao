@@ -31,6 +31,8 @@
 
 最后安装 [假吐槽插件](https://greasyfork.org/zh-CN/scripts/387088) 即可
 
+PS: 经 @libook 提示(issue#1) Firefox 手机版是支持安装插件的。
+
 ### 苹果 iPhone 手机 (安卓也可以用)
 
 将 **任意** 页面添加到个人收藏;

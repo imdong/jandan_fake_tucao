@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽(假吐槽)
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      1.02
+// @version      1.03
 // @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -131,6 +131,7 @@
         get_count: function (dom) {
             // 获取id
             let tucao_id = $(dom).prev().data('id');
+            dom.innerText = " 假吐槽[.] ";
             $.ajax({
                 dataType: 'JSONP',
                 url: 'https://api-zero.livere.com/v1/common/config',
@@ -166,6 +167,7 @@
                         this.get_count(this.lazyload_dom[i]);
                         // 既然已经加载了 那就移除吧
                         this.lazyload_dom.splice(i, 1);
+                        i--;
                     }
                 }
             }
