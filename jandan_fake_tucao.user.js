@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽(假吐槽)
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      1.03
+// @version      1.04
 // @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -21,11 +21,16 @@
         init: function () {
             this.livere_ids = atob(this.livere_uid).split('/');
 
+            // 添加样式
+            let style_dom = document.createElement('style');
+            style_dom.innerHTML = ".jandan-tucao-livere {margin: 10px 0;padding: 0 5px;border: 1px solid #e5e5e5;}";
+            $('head').append(style_dom);
+
             // 吐槽详情页 (直接显示)
             if (location.pathname.substr(0, 3) == '/t/') {
                 this.load_livere($('#tucao-list'), location.pathname.substr(3));
                 // 加一个隐藏/显示原生吐槽的按钮
-                $('#tucao-list .jandan-tucao').before('<a href="javascript:;" class="tucao-btn" id="jandan-tucao-show"> 吐槽去哪了?(显示 or 隐藏 原生真吐槽) </a>');
+                $('#tucao-list .jandan-tucao').before('<a href="javascript:;" class="tucao-btn" id="jandan-tucao-show"> 吐槽去哪了?(显示 or 隐藏 原生真吐槽) </a>'); // <label><input type="checkbox" /> 原生吐槽0评论是否自动隐藏</label>
                 $('#jandan-tucao-show').click(function () {
                     if ($('#tucao-list .jandan-tucao').is(":hidden")) {
                         $('#tucao-list .jandan-tucao').animate({ height: 'toggle', opacity: 'toggle' }, 'slow');
@@ -35,12 +40,17 @@
                 });
 
                 // 如果原生吐槽没有数据就折叠他
-                if ($('#tucao-list .tucao-list').height() <= 0) {
-                    $('#tucao-list .jandan-tucao').animate({ height: 'toggle', opacity: 'toggle' }, 'slow');
-                }
+                var hide_tucao_interval_id = setInterval(() => {
+                    if ($('#tucao-list .tucao-list').text().indexOf('加载中') < 0) {
+                        if ($('#tucao-list .tucao-list .tucao-row').length <= 0) {
+                            $('#tucao-list .jandan-tucao').animate({ height: 'toggle', opacity: 'toggle' }, 'slow');
+                        }
+                        clearInterval(hide_tucao_interval_id);
+                    }
+                }, 100);
+
                 return;
             }
-            console.log($);
             // 给原生吐槽后面追加一个按钮
             $('.commentlist>li .tucao-btn').after('<a href="javascript:;" class="tucao-livere-btn"> 假吐槽 </a>');
             $('.commentlist>li .tucao-livere-btn').click(function (e) {
@@ -48,12 +58,19 @@
                     comment_dom = $(this).closest('li'),
                     container = comment_dom.find("div.jandan-tucao-livere");
 
+                // 如果有原生吐槽就隐藏他
+                comment_dom.find("div.jandan-tucao").fadeOut();
+
                 // 显示 or 隐藏 是个问题
                 if (container.length) {
                     container.slideToggle("fast");
                 } else {
                     jandan_fake_tucao.load_livere(comment_dom, tucao_id);
                 }
+            });
+            // 点击原生吐槽就隐藏 假吐槽
+            $('.commentlist>li .tucao-btn').click(function (e) {
+                $(this).closest('li').find("div.jandan-tucao-livere").fadeOut();
             });
 
             // 绑定懒加载
