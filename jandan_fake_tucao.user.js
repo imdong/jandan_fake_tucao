@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽(假吐槽)
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      1.04
+// @version      1.05
 // @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -40,7 +40,7 @@
                 });
 
                 // 如果原生吐槽没有数据就折叠他
-                var hide_tucao_interval_id = setInterval(() => {
+                var hide_tucao_interval_id = setInterval(function () {
                     if ($('#tucao-list .tucao-list').text().indexOf('加载中') < 0) {
                         if ($('#tucao-list .tucao-list .tucao-row').length <= 0) {
                             $('#tucao-list .jandan-tucao').animate({ height: 'toggle', opacity: 'toggle' }, 'slow');
@@ -126,7 +126,7 @@
         },
         // 检查评论框是否加载出来
         check_comment: function () {
-            this.interval_id = setInterval(() => {
+            this.interval_id = setInterval(function () {
                 if (typeof LivereTower === 'undefined') return;
                 let lv_comment = LivereTower.get('lv_comment');
                 if (lv_comment && lv_comment.id != this.lv_comment_id) {
