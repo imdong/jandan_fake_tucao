@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽(假吐槽)
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      1.05
+// @version      1.07
 // @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -40,7 +40,7 @@
                 });
 
                 // 如果原生吐槽没有数据就折叠他
-                var hide_tucao_interval_id = setInterval(() => {
+                var hide_tucao_interval_id = setInterval(function () {
                     if ($('#tucao-list .tucao-list').text().indexOf('加载中') < 0) {
                         if ($('#tucao-list .tucao-list .tucao-row').length <= 0) {
                             $('#tucao-list .jandan-tucao').animate({ height: 'toggle', opacity: 'toggle' }, 'slow');
@@ -52,8 +52,12 @@
                 return;
             }
             // 给原生吐槽后面追加一个按钮
-            $('.commentlist>li .tucao-btn').after('<a href="javascript:;" class="tucao-livere-btn"> 假吐槽 </a>');
-            $('.commentlist>li .tucao-livere-btn:not(.bind-success)').click(function (e) {
+            $('.commentlist>li .tucao-btn').each(function (index, item) {
+                if (item.nextElementSibling == null) {
+                    $(item).after('<a href="javascript:;" class="tucao-livere-btn"> 假吐槽 </a>');
+                }
+            });
+            $('.commentlist>li .tucao-livere-btn').click(function (e) {
                 let tucao_id = $(this).prev().data('id'),
                     comment_dom = $(this).closest('li'),
                     container = comment_dom.find("div.jandan-tucao-livere");
@@ -126,7 +130,7 @@
         },
         // 检查评论框是否加载出来
         check_comment: function () {
-            this.interval_id = setInterval(() => {
+            this.interval_id = setInterval(function () {
                 if (typeof LivereTower === 'undefined') return;
                 let lv_comment = LivereTower.get('lv_comment');
                 if (lv_comment && lv_comment.id != this.lv_comment_id) {
