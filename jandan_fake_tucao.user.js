@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽(假吐槽)
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      1.07
+// @version      1.08
 // @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -11,6 +11,8 @@
 
 (function ($) {
     'use strict';
+
+    if (jandan_fake_tucao) return;
 
     var jandan_fake_tucao = window.jandan_fake_tucao || {
         livere_uid: 'MTAyMC80NTA0MS8yMTU1OQ==',
