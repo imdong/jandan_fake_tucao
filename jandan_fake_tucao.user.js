@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         煎蛋外挂吐槽(假吐槽)
 // @namespace    http://qs5.org/?jandan_fake_tucao
-// @version      1.04
+// @version      1.05
 // @description  不能吐槽怎么活？不如假装有吐槽？
 // @author       ImDong
 // @match        *://jandan.net/*
@@ -53,7 +53,7 @@
             }
             // 给原生吐槽后面追加一个按钮
             $('.commentlist>li .tucao-btn').after('<a href="javascript:;" class="tucao-livere-btn"> 假吐槽 </a>');
-            $('.commentlist>li .tucao-livere-btn').click(function (e) {
+            $('.commentlist>li .tucao-livere-btn:not(.bind-success)').click(function (e) {
                 let tucao_id = $(this).prev().data('id'),
                     comment_dom = $(this).closest('li'),
                     container = comment_dom.find("div.jandan-tucao-livere");
@@ -67,7 +67,7 @@
                 } else {
                     jandan_fake_tucao.load_livere(comment_dom, tucao_id);
                 }
-            });
+            }).addClass('bind-success');
             // 点击原生吐槽就隐藏 假吐槽
             $('.commentlist>li .tucao-btn').click(function (e) {
                 $(this).closest('li').find("div.jandan-tucao-livere").fadeOut();
